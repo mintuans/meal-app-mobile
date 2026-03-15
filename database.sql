@@ -48,11 +48,12 @@ CREATE TABLE meal_types (
 -- 4. Bảng NGUYÊN LIỆU (Từ xa / Hệ thống chung)
 CREATE TABLE ingredients (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE, -- NULL nếu là nguyên liệu mẫu của hệ thống
     name VARCHAR(255) NOT NULL,
-    category_id UUID NOT NULL REFERENCES ingredient_categories(id) ON DELETE RESTRICT, -- Ràng buộc khóa ngoại
-    base_price DECIMAL(10,2),      -- Giá cơ sở tham khảo
-    image_data BYTEA,              -- Thay vì URL, ta lưu ảnh dưới dạng nhị phân Bytea (tương tự BLOB)
-    image_filename VARCHAR(255),   -- Lưu tên gốc của file ảnh
+    category_id UUID NOT NULL REFERENCES ingredient_categories(id) ON DELETE RESTRICT,
+    base_price DECIMAL(10,2),
+    image_data BYTEA,
+    image_filename VARCHAR(255),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 

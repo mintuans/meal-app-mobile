@@ -4,11 +4,12 @@ const userController = {
   // Lấy chi tiết thông tin user
   async getUserProfile(req, res, next) {
     try {
-      const { id } = req.params;
+      // Bảo mật: Nếu không phải Admin, chỉ cho phép lấy profile của chính mình
+      const id = (req.user.role === 'admin') ? req.params.id : req.user.id;
       const user = await userService.getUserById(id);
       
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: 'Không tìm thấy người dùng' });
       }
 
       res.status(200).json({
@@ -16,7 +17,7 @@ const userController = {
         data: user,
       });
     } catch (error) {
-      next(error); // Chuyển lỗi xuống cho middleware bắt lỗi xử lý
+      next(error);
     }
   },
 
@@ -38,9 +39,20 @@ const userController = {
   // Cập nhật Profile
   async updateProfile(req, res, next) {
     try {
-      const { id } = req.params;
+      const isAdmin = req.user.role === 'admin';
+      // Bảo mật: Nếu không phải Admin, chỉ được sửa chính mình
+      const id = isAdmin ? req.params.id : req.user.id;
+      
       const { name, height, weight, grocery_limit, is_active, role } = req.body;
-      const updatedUser = await userService.updateProfile(id, { name, height, weight, grocery_limit, is_active, role });
+      
+      // Bảo mật: Chỉ Admin mới có quyền đổi Role hoặc trạng thái kích hoạt (is_active)
+      const updateData = { name, height, weight, grocery_limit };
+      if (isAdmin) {
+        if (is_active !== undefined) updateData.is_active = is_active;
+        if (role !== undefined) updateData.role = role;
+      }
+
+      const updatedUser = await userService.updateProfile(id, updateData);
 
       res.status(200).json({
         success: true,

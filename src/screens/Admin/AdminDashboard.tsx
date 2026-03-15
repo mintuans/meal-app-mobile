@@ -77,7 +77,8 @@ export const AdminDashboard = () => {
           });
           if (res.success) {
             showNotification(`Đã ${!user.is_active ? 'mở khóa' : 'khóa'} tài khoản thành công`, 'success');
-            loadUsers();
+            // Cập nhật state cục bộ thay vì load lại toàn bộ danh sách
+            setUsers(prev => prev.map(u => u.id === user.id ? { ...u, is_active: !user.is_active } : u));
             setSelectedUser(prev => prev?.id === user.id ? ({ ...prev, is_active: !user.is_active }) : prev);
           }
         } catch (error: any) {
@@ -100,7 +101,8 @@ export const AdminDashboard = () => {
           const res = await fetchApi<any>(`/users/${id}`, { method: 'DELETE' });
           if (res.success) {
             showNotification('Đã xóa người dùng thành công', 'success');
-            loadUsers();
+            // Cập nhật state cục bộ
+            setUsers(prev => prev.filter(u => u.id !== id));
             setSelectedUser(null);
           }
         } catch (error: any) {

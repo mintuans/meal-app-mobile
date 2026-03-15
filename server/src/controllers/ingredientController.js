@@ -60,7 +60,8 @@ const ingredientController = {
   // GET: /api/v1/ingredients
   async getAllIngredients(req, res, next) {
     try {
-      const data = await ingredientService.getAllIngredients();
+      const userId = req.user.id;
+      const data = await ingredientService.getAllIngredients(userId);
       res.status(200).json({ success: true, data });
     } catch (error) {
       next(error);

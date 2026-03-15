@@ -17,6 +17,7 @@ const Ingredient = {
       FROM ingredients i
       JOIN ingredient_categories ic ON i.category_id = ic.id
       LEFT JOIN user_pantry up ON i.id = up.ingredient_id AND up.user_id = $1
+      WHERE i.user_id = $1 OR i.user_id IS NULL
     `;
     const values = [userId];
     const { rows } = await db.query(text, values);
@@ -47,13 +48,13 @@ const Ingredient = {
     try {
       await client.query('BEGIN');
       
-      // 1. Thêm vào bảng ingredients
+      // 1. Thêm vào bảng ingredients (gán user_id để làm nguyên liệu riêng tư)
       const ingText = `
-        INSERT INTO ingredients (name, category_id, base_price, image_data, image_filename)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO ingredients (name, category_id, base_price, image_data, image_filename, user_id)
+        VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING id;
       `;
-      const ingRes = await client.query(ingText, [name, categoryId, price, imageData, imageFilename]);
+      const ingRes = await client.query(ingText, [name, categoryId, price, imageData, imageFilename, userId]);
       const ingredientId = ingRes.rows[0].id;
 
       // 2. Thêm vào bảng user_pantry
@@ -88,8 +89,14 @@ const Ingredient = {
   },
 
   // Lấy toàn bộ danh sách nguyên liệu hệ thống
-  async getAllIngredients() {
-    const { rows } = await db.query('SELECT id, name, base_price as price FROM ingredients ORDER BY name ASC');
+  async getAllIngredients(userId) {
+    const text = `
+      SELECT id, name, base_price as price 
+      FROM ingredients 
+      WHERE user_id = $1 OR user_id IS NULL
+      ORDER BY name ASC
+    `;
+    const { rows } = await db.query(text, [userId]);
     return rows;
   }
 };

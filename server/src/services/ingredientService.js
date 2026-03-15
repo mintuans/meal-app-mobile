@@ -50,8 +50,8 @@ const ingredientService = {
     return await Ingredient.getCategories();
   },
 
-  async getAllIngredients() {
-    const list = await Ingredient.getAllIngredients();
+  async getAllIngredients(userId) {
+    const list = await Ingredient.getAllIngredients(userId);
     return list.map(item => ({
       ...item,
       price: item.price ? parseFloat(item.price) : 0
