@@ -6,7 +6,9 @@ import { useLocation } from 'react-router-dom';
 
 export const BottomNav = () => {
   const location = useLocation();
-  if (location.pathname === '/auth') return null;
+  const role = localStorage.getItem('role');
+
+  if (location.pathname === '/auth' || role === 'admin') return null;
 
   const navItems = [
     { icon: Home, label: 'Home', path: '/' },

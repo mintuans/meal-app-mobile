@@ -7,6 +7,9 @@ CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255),        -- Lưu mật khẩu đã mã hóa
+    role VARCHAR(50) DEFAULT 'user', -- Quyền: 'user' hoặc 'admin'
+    is_active BOOLEAN DEFAULT TRUE, -- Trạng thái kích hoạt tài khoản
     height DECIMAL(5,2),          -- Chiều cao (cm)
     weight DECIMAL(5,2),          -- Cân nặng (kg)
     grocery_limit DECIMAL(10,2),  -- Hạn mức chi tiêu mua sắm hàng tuần/tháng

@@ -2,13 +2,16 @@ import React from 'react';
 import { Mail, Lock, User, ArrowRight, Github, Chrome, Eye, EyeOff, UtensilsCrossed } from 'lucide-react';
 import { Button } from '@/src/components/Button';
 import { Card } from '@/src/components/Card';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { fetchApi } from '@/src/services/apiService';
 import { useNotification } from '@/src/context/NotificationContext';
 
 export const Auth = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { showNotification } = useNotification();
+  
+  const from = location.state?.from?.pathname || '/';
   const [isLogin, setIsLogin] = React.useState(true);
   const [showPassword, setShowPassword] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -35,8 +38,15 @@ export const Auth = () => {
       if (res.success && res.token) {
         localStorage.setItem('token', res.token);
         localStorage.setItem('userId', res.user.id);
+        localStorage.setItem('role', res.user.role);
         showNotification(isLogin ? "Chào mừng trở lại!" : "Đăng ký thành công!", "success");
-        navigate('/');
+        
+        // Admin chỉ được vào màn hình admin
+        if (res.user.role === 'admin') {
+          navigate('/admin', { replace: true });
+        } else {
+          navigate(from, { replace: true });
+        }
       }
     } catch (error: any) {
       showNotification(error.message || "Lỗi xử lý", "error");

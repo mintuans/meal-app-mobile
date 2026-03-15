@@ -39,13 +39,32 @@ const userController = {
   async updateProfile(req, res, next) {
     try {
       const { id } = req.params;
-      const { name, height, weight, grocery_limit } = req.body;
-      const updatedUser = await userService.updateProfile(id, { name, height, weight, grocery_limit });
+      const { name, height, weight, grocery_limit, is_active, role } = req.body;
+      const updatedUser = await userService.updateProfile(id, { name, height, weight, grocery_limit, is_active, role });
 
       res.status(200).json({
         success: true,
         data: updatedUser,
       });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async getAllUsers(req, res, next) {
+    try {
+      const users = await userService.getAllUsers();
+      res.status(200).json({ success: true, data: users });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async deleteUser(req, res, next) {
+    try {
+      const { id } = req.params;
+      await userService.deleteUser(id);
+      res.status(200).json({ success: true, message: 'Đã xóa người dùng thành công' });
     } catch (error) {
       next(error);
     }

@@ -32,6 +32,14 @@ const userService = {
     if (!id) throw new Error('ID người dùng không hợp lệ');
     const updatedUser = await User.update(id, userData);
     return updatedUser;
+  },
+
+  async getAllUsers() {
+    return await User.getAllUsers();
+  },
+
+  async deleteUser(id) {
+    return await User.delete(id);
   }
 };
 

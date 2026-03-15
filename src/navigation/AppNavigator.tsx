@@ -11,21 +11,28 @@ import { Templates } from '@/src/screens/Templates/Templates';
 import { Profile } from '@/src/screens/Profile/Profile';
 import { Settings } from '@/src/screens/Settings/Settings';
 import { Auth } from '@/src/screens/Auth/Auth';
+import { AdminDashboard } from '@/src/screens/Admin/AdminDashboard';
+import { ProtectedRoute } from '@/src/components/ProtectedRoute';
 
 export const AppNavigator = () => {
   return (
     <Routes>
       <Route path="/auth" element={<Auth />} />
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/planner" element={<WeeklyPlanner />} />
-      <Route path="/daily" element={<DailyPlan />} />
-      <Route path="/dish/:id" element={<DishDetails />} />
-      <Route path="/pantry" element={<Pantry />} />
-      <Route path="/grocery" element={<Grocery />} />
-      <Route path="/analytics" element={<Analytics />} />
-      <Route path="/templates" element={<Templates />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/settings" element={<Settings />} />
+      
+      {/* Các route yêu cầu đăng nhập */}
+      <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/planner" element={<ProtectedRoute><WeeklyPlanner /></ProtectedRoute>} />
+      <Route path="/daily" element={<ProtectedRoute><DailyPlan /></ProtectedRoute>} />
+      <Route path="/dish/:id" element={<ProtectedRoute><DishDetails /></ProtectedRoute>} />
+      <Route path="/pantry" element={<ProtectedRoute><Pantry /></ProtectedRoute>} />
+      <Route path="/grocery" element={<ProtectedRoute><Grocery /></ProtectedRoute>} />
+      <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
+      <Route path="/templates" element={<ProtectedRoute><Templates /></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+      <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+      
+      {/* Route dành riêng cho Admin */}
+      <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminDashboard /></ProtectedRoute>} />
     </Routes>
   );
 };

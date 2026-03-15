@@ -19,10 +19,10 @@ export const Toast = ({ message, type, onClose }: ToastProps) => {
   };
 
   const bgColors = {
-    success: 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-100 dark:border-emerald-500/20',
-    error: 'bg-red-50 dark:bg-red-500/10 border-red-100 dark:border-red-500/20',
-    info: 'bg-blue-50 dark:bg-blue-500/10 border-blue-100 dark:border-blue-500/20',
-    warning: 'bg-amber-50 dark:bg-amber-500/10 border-amber-100 dark:border-amber-500/20'
+    success: 'bg-white/95 dark:bg-slate-900/95 border-emerald-500/50 shadow-emerald-500/10',
+    error: 'bg-white/95 dark:bg-slate-900/95 border-red-500/50 shadow-red-500/10',
+    info: 'bg-white/95 dark:bg-slate-900/95 border-blue-500/50 shadow-blue-500/10',
+    warning: 'bg-white/95 dark:bg-slate-900/95 border-amber-500/50 shadow-amber-500/10'
   };
 
   return (
@@ -31,7 +31,7 @@ export const Toast = ({ message, type, onClose }: ToastProps) => {
         initial={{ opacity: 0, y: -20, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -20, scale: 0.95 }}
-        className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl border-2 shadow-xl shadow-black/5 min-w-[320px] max-w-md ${bgColors[type]}`}
+        className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl border-2 backdrop-blur-xl shadow-2xl ${bgColors[type]} min-w-[320px] max-w-md`}
       >
         <div className="shrink-0">{icons[type]}</div>
         <p className="flex-1 text-sm font-bold text-slate-800 dark:text-slate-100">{message}</p>
