@@ -9,6 +9,7 @@ const Ingredient = {
         i.id as ingredient_id, 
         i.name, 
         i.base_price, 
+        i.base_unit,
         ic.name as category_name,
         up.in_stock,
         up.quantity_amount,
@@ -50,20 +51,19 @@ const Ingredient = {
       
       // 1. Thêm vào bảng ingredients (gán user_id để làm nguyên liệu riêng tư)
       const ingText = `
-        INSERT INTO ingredients (name, category_id, base_price, image_data, image_filename, user_id)
-        VALUES ($1, $2, $3, $4, $5, $6)
+        INSERT INTO ingredients (name, category_id, base_price, base_unit, image_data, image_filename, user_id)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING id;
       `;
-      const ingRes = await client.query(ingText, [name, categoryId, price, imageData, imageFilename, userId]);
+      const ingRes = await client.query(ingText, [name, categoryId, price, amount, imageData, imageFilename, userId]);
       const ingredientId = ingRes.rows[0].id;
 
       // 2. Thêm vào bảng user_pantry
       const pantryText = `
-        INSERT INTO user_pantry (user_id, ingredient_id, in_stock, quantity_amount)
-        VALUES ($1, $2, true, $3)
-        RETURNING *;
+        INSERT INTO user_pantry (user_id, ingredient_id, quantity_amount)
+        VALUES ($1, $2, $3)
       `;
-      const pantryRes = await client.query(pantryText, [userId, ingredientId, amount]);
+      await client.query(pantryText, [userId, ingredientId, amount]);
       
       await client.query('COMMIT');
       return {
@@ -88,10 +88,31 @@ const Ingredient = {
     return rows;
   },
 
+  async createCategory(name) {
+    const { rows } = await db.query(
+      'INSERT INTO ingredient_categories (name) VALUES ($1) RETURNING *',
+      [name]
+    );
+    return rows[0];
+  },
+
+  async updateCategory(id, name) {
+    const { rows } = await db.query(
+      'UPDATE ingredient_categories SET name = $1 WHERE id = $2 RETURNING *',
+      [name, id]
+    );
+    return rows[0];
+  },
+
+  async deleteCategory(id) {
+    await db.query('DELETE FROM ingredient_categories WHERE id = $1', [id]);
+    return true;
+  },
+
   // Lấy toàn bộ danh sách nguyên liệu hệ thống
   async getAllIngredients(userId) {
     const text = `
-      SELECT id, name, base_price as price 
+      SELECT id, name, base_price as price, base_unit as unit
       FROM ingredients 
       WHERE user_id = $1 OR user_id IS NULL
       ORDER BY name ASC

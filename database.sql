@@ -85,7 +85,6 @@ CREATE TABLE meals (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-
 -- 7. Bảng CHI TIẾT CÔNG THỨC (Quan hệ n-n giữa Món ăn và Nguyên liệu)
 CREATE TABLE meal_ingredients (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -95,7 +94,6 @@ CREATE TABLE meal_ingredients (
     calculated_price DECIMAL(10,2),-- Giá cụ thể cho định lượng này
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
-
 
 -- 8. Bảng THỰC ĐƠN HÀNG NGÀY/TUẦN (Meal Plan)
 CREATE TABLE meal_plans (

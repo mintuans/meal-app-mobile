@@ -14,6 +14,8 @@ const authRoutes = require('./routes/authRoutes');
 const ingredientRoutes = require('./routes/ingredientRoutes');
 const mealRoutes = require('./routes/mealRoutes');
 const mealPlanRoutes = require('./routes/mealPlanRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes');
 
 // Routes
 app.use('/api/v1/auth', authRoutes);
@@ -21,6 +23,8 @@ app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/ingredients', ingredientRoutes);
 app.use('/api/v1/meals', mealRoutes);
 app.use('/api/v1/meal-plans', mealPlanRoutes);
+app.use('/api/v1/notifications', notificationRoutes);
+app.use('/api/v1/analytics', analyticsRoutes);
 
 // Xử lý Route 404
 app.use((req, res, next) => {

@@ -15,6 +15,14 @@ router.post('/', authMiddleware.verifyToken, ingredientController.addCustomIngre
 // Endpoint: Lấy danh sách danh mục
 router.get('/categories', authMiddleware.verifyToken, ingredientController.getCategories);
 
+// Các endpoint quản lý danh mục (Admin/User tùy policy - hiện tại cho phép user đã token)
+router.post('/categories', authMiddleware.verifyToken, ingredientController.createCategory);
+router.put('/categories/:id', authMiddleware.verifyToken, ingredientController.updateCategory);
+router.delete('/categories/:id', authMiddleware.verifyToken, ingredientController.deleteCategory);
+
+// Endpoint: Quét hóa đơn (OCR)
+router.post('/scan-receipt', authMiddleware.verifyToken, ingredientController.scanReceipt);
+
 // Endpoint: Lấy toàn bộ danh sách nguyên liệu hệ thống
 router.get('/', authMiddleware.verifyToken, ingredientController.getAllIngredients);
 

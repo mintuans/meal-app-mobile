@@ -49,6 +49,8 @@ const Meal = {
         ic.name as category,
         mi.amount,
         mi.calculated_price as price,
+        i.base_price as "basePrice",
+        i.base_unit as "baseUnit",
         i.image_data
       FROM meal_ingredients mi
       JOIN ingredients i ON mi.ingredient_id = i.id

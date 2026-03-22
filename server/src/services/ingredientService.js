@@ -13,7 +13,9 @@ const ingredientService = {
       id: item.ingredient_id,
       name: item.name,
       category: item.category_name,
+      categoryId: item.category_id,
       price: item.base_price,
+      baseUnit: item.base_unit || '1 unit',
       // Tính logic inStock (nếu user chưa từng check vào pantry, coi như chưa mua -> inStock = false)
       inStock: item.in_stock === null ? false : item.in_stock,
       amount: item.quantity_amount || '1 unit',
@@ -50,11 +52,24 @@ const ingredientService = {
     return await Ingredient.getCategories();
   },
 
+  async createCategory(name) {
+    return await Ingredient.createCategory(name);
+  },
+
+  async updateCategory(id, name) {
+    return await Ingredient.updateCategory(id, name);
+  },
+
+  async deleteCategory(id) {
+    return await Ingredient.deleteCategory(id);
+  },
+
   async getAllIngredients(userId) {
     const list = await Ingredient.getAllIngredients(userId);
     return list.map(item => ({
       ...item,
-      price: item.price ? parseFloat(item.price) : 0
+      price: item.price ? parseFloat(item.price) : 0,
+      unit: item.unit || '1 unit'
     }));
   }
 };

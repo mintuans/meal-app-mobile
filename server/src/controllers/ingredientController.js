@@ -1,6 +1,20 @@
 const ingredientService = require('../services/ingredientService');
+const aiService = require('../services/aiService');
 
 const ingredientController = {
+  // POST: /api/v1/ingredients/scan-receipt
+  async scanReceipt(req, res, next) {
+    try {
+      const { image } = req.body;
+      if (!image) throw { status: 400, message: "Thiếu ảnh hóa đơn" };
+      
+      const items = await aiService.scanReceipt(image);
+      res.status(200).json({ success: true, data: items });
+    } catch (error) {
+      next(error);
+    }
+  },
+
   // GET: /api/v1/ingredients/pantry (Tạm thời lấy userID từ req.user do Middleware truyền sang)
   async getPantry(req, res, next) {
     try {
@@ -52,6 +66,37 @@ const ingredientController = {
     try {
       const data = await ingredientService.getCategories();
       res.status(200).json({ success: true, data });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async createCategory(req, res, next) {
+    try {
+      const { name } = req.body;
+      const data = await ingredientService.createCategory(name);
+      res.status(201).json({ success: true, data });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async updateCategory(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { name } = req.body;
+      const data = await ingredientService.updateCategory(id, name);
+      res.status(200).json({ success: true, data });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async deleteCategory(req, res, next) {
+    try {
+      const { id } = req.params;
+      await ingredientService.deleteCategory(id);
+      res.status(200).json({ success: true, message: 'Xóa danh mục thành công' });
     } catch (error) {
       next(error);
     }
